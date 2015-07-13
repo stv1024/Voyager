@@ -28,7 +28,8 @@ public class TownButton : MonoBehaviour, IPointerClickHandler
     {
         if (null != Model)
         {
-            Debug.Log("Show Town Info Panel "+Model.Name);
+            TradePanel.Instance.Show();
+            TradePanel.Instance.Town = Model;
         }
     }
     public void OnTownRightClick()

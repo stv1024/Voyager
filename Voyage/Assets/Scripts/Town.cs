@@ -16,6 +16,8 @@ public class Town : Entity
 
     public readonly Dictionary<int, double> CommodityPriceTable = new Dictionary<int, double>();
 
+    public readonly Dictionary<int, double> ProductivityTable = new Dictionary<int, double>();
+
     public TownButton InMapButton;
 
     public long Population;
@@ -51,8 +53,13 @@ public class Town : Entity
             {
                 CommodityPriceTable.Add(id, 0);
             }
+            if (!ProductivityTable.ContainsKey(id))
+            {
+                ProductivityTable.Add(id, 0);
+            }
         }
         RebuildCommodityPrice();
+        RebuildProductivity();
         SettleRemaining = 0;
     }
 
@@ -62,6 +69,7 @@ public class Town : Entity
         if (SettleRemaining <= 0)
         {
             SettleRemaining += Parameters.TownSettleIntervalSeconds;
+            //商品消耗
             foreach (var commodityInfo in MainController.Instance.DataTableManager.CommodityTable.Values)
             {
                 var id = commodityInfo.ID;
@@ -71,7 +79,20 @@ public class Town : Entity
                     CommodityAmountTable[id] = 0;
                 }
             }
+            //商品生产
+            foreach (var kv in ProductivityTable)
+            {
+                var id = kv.Key;
+                CommodityAmountTable[id] += kv.Value * dt;
+            }
+
+            //商品价格浮动
             RebuildCommodityPrice();
+
+
+            //人口变化
+
+            //RebuildProductivity(); 人口没变化则产量也不会变化
         }
 
     }
@@ -88,11 +109,36 @@ public class Town : Entity
             CommodityPriceTable[id] = price;
         }
     }
-    
-	public void OnInMapButtonClick () {
+    public void RebuildProductivity()
+    {
+        foreach (var kv in MainController.Instance.DataTableManager.CommodityTable)
+        {
+            var id = kv.Key;
+            ProductivityTable[id] = 0;
+        }
+        foreach (var productInfo in Info.OriginalProductList)
+        {
+            ProductivityTable[productInfo.ID] += productInfo.ProductivityPerPopulationPerMinute * Population/60;
+        }
+    }
 
-        Debug.Log("Click Town"+Info.Name);
-	}
+    public void OnInMapButtonClick()
+    {
+    }
+
+    public void OnFleetBuyCommodity(int id)
+    {
+        if (CommodityAmountTable[id] >= 1)
+        {
+            CommodityAmountTable[id] -= 1;
+            RebuildCommodityPrice();
+        }
+    }
+    public void OnFleetSellCommodity(int id)
+    {
+        CommodityAmountTable[id] += 1;
+        RebuildCommodityPrice();
+    }
 
     public override string ToString()
     {

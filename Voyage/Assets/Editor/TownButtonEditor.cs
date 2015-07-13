@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Linq;
+using UnityEditor;
 
 [CustomEditor(typeof(TownButton))]
 public class TownButtonEditor : Editor
@@ -25,6 +26,12 @@ public class TownButtonEditor : Editor
                 }
                 EditorGUILayout.LabelField("CommodityPriceTable-----");
                 foreach (var kv in town.CommodityPriceTable)
+                {
+                    var commodityInfo = MainController.Instance.DataTableManager.CommodityTable[kv.Key];
+                    EditorGUILayout.LabelField(string.Format("[{0}]{1}", commodityInfo.ID, commodityInfo.Name), kv.Value.ToString());
+                }
+                EditorGUILayout.LabelField("ProductivityTable-----");
+                foreach (var kv in town.ProductivityTable.Where(x=>x.Value > 0))
                 {
                     var commodityInfo = MainController.Instance.DataTableManager.CommodityTable[kv.Key];
                     EditorGUILayout.LabelField(string.Format("[{0}]{1}", commodityInfo.ID, commodityInfo.Name), kv.Value.ToString());

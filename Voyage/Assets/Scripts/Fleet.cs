@@ -2,6 +2,7 @@
 using Assets.Scripts.Data;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Fleet : Entity
 {
@@ -37,6 +38,8 @@ public class Fleet : Entity
     public Vector2 DestinationPosition;
     public Town DestinationTown;
 
+    public readonly Dictionary<int, double> CommodityAmountTable = new Dictionary<int, double>();
+
     public FleetActor Actor;
 
     public void Reset()
@@ -44,7 +47,14 @@ public class Fleet : Entity
         State = StateEnum.Anchored;
         Velocity = Vector2.zero;
         DestinationTown = null;
-
+        foreach (var commodityInfo in MainController.Instance.DataTableManager.CommodityTable.Values)
+        {
+            var id = commodityInfo.ID;
+            if (!CommodityAmountTable.ContainsKey(id))
+            {
+                CommodityAmountTable.Add(id, 0);
+            }
+        }
         Rebuild();
     }
 
@@ -103,6 +113,21 @@ public class Fleet : Entity
         }
     }
 
+
+    public void BuyCommodityFromTown(Town town, int id)
+    {
+        //TODO:检测
+        CommodityAmountTable[id] += 1;
+        MainController.Instance.Golds -= town.CommodityPriceTable[id];
+        town.OnFleetBuyCommodity(id);
+    }
+    public void SellCommodityToTown(Town town, int id)
+    {
+        //TODO:检测
+        CommodityAmountTable[id] -= 1;
+        MainController.Instance.Golds += town.CommodityPriceTable[id];
+        town.OnFleetSellCommodity(id);
+    }
 
     public void Rebuild()
     {

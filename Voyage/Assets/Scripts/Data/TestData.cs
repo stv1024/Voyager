@@ -10,19 +10,22 @@ public static class TestData
         {
             ID = 1,
             Name = "KingsLanding",
-            Position = new Vector2(318, -61)
+            Position = new Vector2(318, -61),
+            OriginalProductList = new List<TownInfo.ProductInfo>{
+                new TownInfo.ProductInfo{ID = 1, ProductivityPerPopulationPerMinute = 0.025}
+            },
         },
         new TownInfo
         {
             ID = 2,
             Name = "WinterFell",
-            Position = new Vector2(-391, 103)
+            Position = new Vector2(-391, 103),
         },
         new TownInfo
         {
             ID = 3,
             Name = "Eyrie",
-            Position = new Vector2(225, 293)
+            Position = new Vector2(225, 293),
         },
     };
 

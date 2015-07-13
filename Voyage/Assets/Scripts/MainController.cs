@@ -25,6 +25,8 @@ public class MainController : MonoBehaviour
 
     public float CurrentTownSettleSeconds;
 
+    public double Golds = 1000;
+
     public void Awake()
     {
         Instance = this;
