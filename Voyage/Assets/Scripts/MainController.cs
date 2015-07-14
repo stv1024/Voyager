@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts.Data;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 最高级控制器，主入口
@@ -26,6 +27,7 @@ public class MainController : MonoBehaviour
     public float CurrentTownSettleSeconds;
 
     public double Golds = 1000;
+    public Text GoldsLabel;
 
     public void Awake()
     {
@@ -92,6 +94,12 @@ public class MainController : MonoBehaviour
         foreach (var entity in EntityList)
         {
             entity.Update(worldDt);
+        }
+
+        if (GoldsLabel) GoldsLabel.text = string.Format("{0:0}○", Golds);
+        if (TradePanel.Instance && TradePanel.Instance.isActiveAndEnabled)
+        {
+            TradePanel.Instance.Refresh();
         }
     }
 

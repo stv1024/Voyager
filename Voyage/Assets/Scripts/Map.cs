@@ -41,10 +41,10 @@ public class Map : MonoBehaviour
 
     public Vector2 MapPositionToLogicPosition(Vector2 mapPos)
     {
-        return mapPos / 0.01f;
+        return mapPos / 1f;
     }
     public Vector2 LogicPositionToMapPosition(Vector2 logicPos)
     {
-        return logicPos*0.01f;
+        return logicPos*1f;
     }
 }

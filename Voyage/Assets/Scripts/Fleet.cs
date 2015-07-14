@@ -114,16 +114,31 @@ public class Fleet : Entity
     }
 
 
-    public void BuyCommodityFromTown(Town town, int id)
+    public void TryBuyCommodityFromTown(Town town, int id)
     {
-        //TODO:检测
+        //检测
+        if (MainController.Instance.Golds < town.CommodityPriceTable[id])
+        {
+            Debug.LogWarningFormat("Golds not enough to buy commodity [{0}]", id);
+            return;
+        }
+        if (town.CommodityAmountTable[id] < 1)
+        {
+            Debug.LogWarningFormat("Town's commodity amount not enough for fleet to buy [{0}]", id);
+            return;
+        }
         CommodityAmountTable[id] += 1;
         MainController.Instance.Golds -= town.CommodityPriceTable[id];
         town.OnFleetBuyCommodity(id);
     }
-    public void SellCommodityToTown(Town town, int id)
+    public void TrySellCommodityToTown(Town town, int id)
     {
-        //TODO:检测
+        //检测
+        if (CommodityAmountTable[id] < 1)
+        {
+            Debug.LogWarningFormat("Commodity amount not enough to sell [{0}]", id);
+            return;
+        }
         CommodityAmountTable[id] -= 1;
         MainController.Instance.Golds += town.CommodityPriceTable[id];
         town.OnFleetSellCommodity(id);

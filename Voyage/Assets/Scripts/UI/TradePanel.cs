@@ -22,6 +22,7 @@ public class TradePanel : MonoBehaviour
     public List<Text> CommodityNameLabelList = new List<Text>();
     public List<Text> AmountInTownLabelList = new List<Text>();
     public List<Text> AmountOnboardLabelList = new List<Text>();
+    public List<Text> PriceLabelList = new List<Text>();
 
     void Setup()
     {
@@ -34,6 +35,7 @@ public class TradePanel : MonoBehaviour
             CommodityNameLabelList.Add(slot.transform.FindChild("Text-Name").GetComponent<Text>());
             AmountInTownLabelList.Add(slot.transform.FindChild("Text-Amount In Town").GetComponent<Text>());
             AmountOnboardLabelList.Add(slot.transform.FindChild("Text-Amount Onboard").GetComponent<Text>());
+            PriceLabelList.Add(slot.transform.FindChild("Text-Price").GetComponent<Text>());
         }
         Destroy(SlotTemplate);
     }
@@ -61,18 +63,19 @@ public class TradePanel : MonoBehaviour
             CommodityNameLabelList[i].text = info.Name;
             AmountInTownLabelList[i].text = Town.CommodityAmountTable[id].ToString();
             AmountOnboardLabelList[i].text = MainController.Instance.FocusedFleet.CommodityAmountTable[id].ToString();
+            PriceLabelList[i].text = string.Format("{0:##.00}○", Town.CommodityPriceTable[id]);
         }
     }
 
     public void Buy(int id)
     {
-        MainController.Instance.FocusedFleet.BuyCommodityFromTown(Town, id);
+        MainController.Instance.FocusedFleet.TryBuyCommodityFromTown(Town, id);
         Refresh();
     }
 
     public void Sell(int id)
     {
-        MainController.Instance.FocusedFleet.SellCommodityToTown(Town, id);
+        MainController.Instance.FocusedFleet.TrySellCommodityToTown(Town, id);
         Refresh();
     }
     public void Haha(int id, int amount)
