@@ -29,7 +29,7 @@ public class TownButton : MonoBehaviour, IPointerClickHandler
         if (null != Model)
         {
             TradePanel.Instance.Show();
-            TradePanel.Instance.Town = Model;
+            TradePanel.Instance.SetAndRefresh(Model);
         }
     }
     public void OnTownRightClick()
